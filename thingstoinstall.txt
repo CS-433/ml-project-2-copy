@@ -1,0 +1,6 @@
+conda create -y -n ml python=3.7 scipy pandas numpy matplotlib
+conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
+pip install -U scikit-learn
+conda install jupyterlab nb_conda_kernels
+pip install --user -U nltk
+conda install -c conda-forge ipywidgets
