@@ -148,7 +148,7 @@ def logistic_regression_cv(x, y, solvers = ['lbfgs', 'saga'], penalty = ['l2'], 
     grid = dict(solver=solvers,penalty=penalty,C=c_values)
     
     #divides the data into folds
-    cv = RepeatedStratifiedKFold(splits=n_splits, n_repeats=3, random_state=1)
+    cv = RepeatedStratifiedKFold(n_splits=splits, n_repeats=3, random_state=1)
     
     #does the grid-search and cross-validation
     grid_search = GridSearchCV(estimator=model, param_grid=grid, n_jobs=-1, cv=cv, scoring='accuracy',error_score=0)
@@ -179,7 +179,7 @@ def logistic_regression(x, y, solver, penalty, c_value):
     """
     
     #creates the model
-    model = Logistic_regression(solver = solver, penalty = penalty, C=c_value)
+    model = LogisticRegression(solver = solver, penalty = penalty, C=c_value)
     
     #fits the model
     model.fit(x, y)
