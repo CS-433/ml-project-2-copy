@@ -7,6 +7,55 @@ import time
 import datetime
 from tqdm import tqdm
 import csv
+from models_bert import *
+from transformers import BertForSequenceClassification, AdamW, BertConfig
+from transformers import get_linear_schedule_with_warmup
+import pandas as pd
+from preprocessing_bert import *
+
+def load_test_data(PATH_DATA, max_len=40):
+    
+    df_test = pd.read_fwf(PATH_DATA + 'twitter-datasets/test_data.txt', header = None, names = ['Tweet'], colspecs = [(0,280)])
+    df_test.rename(columns={"Tweet": "text"},inplace=True)
+    input_ids, attention_masks = tokenize_with_autotokenizer_test(df_test, max_len=40)
+    
+    # using dummy labels to keep the same format
+    test_dataset = TensorDataset(input_ids, attention_masks, torch.ones(10000).long())
+    test_dataloader = as_dataloader(test_dataset, batch_size = 32, random = False) 
+    
+    return test_dataloader 
+
+
+def load_model(device, PATH_DATA, path_model, model_name = 'BertWithCustomClassifier'):
+    '''
+    Load a BERT like model from disc
+    
+    Inputs:
+        device
+        PATH_DATA
+        path_model
+        model_name (str) 'BertWithCustomClassifier' or 'BertForSequenceClassification'
+    
+    Outputs:
+        model (nn.Module) : desired model (either BertWithCustomClassifier or BertForSequenceClassification)
+    '''
+      # Load pretrained BERT model with single linear classification layer on top. 
+    if model_name == 'BertWithCustomClassifier' :
+        model =  BertWithCustomClassifier(nb_hidden=500)
+    if model_name == 'BertForSequenceClassification':
+        model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
+                                                               num_labels = 2,
+                                                               output_attentions = False,
+                                                               output_hidden_states = False)
+    
+    model.load_state_dict(torch.load(path_model))
+    # put model in eval mode
+    model.eval()
+    
+    # Tell pytorch to run this model on the GPU.
+    model.to(device) #model.cuda()
+
+    return model
 
 def train_val_split(dataset, proportion = 0.8):
     '''
@@ -50,14 +99,7 @@ def as_dataloader(dataset, batch_size = 32, random = True):
         return DataLoader(dataset, sampler = SequentialSampler(dataset),batch_size = batch_size)
     
 # Currently not used but could be in the future
-#def load_model(device):
-#  # Load pretrained BERT model with single linear classification layer on top. 
-#  model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels = 2, output_attentions = False, output_hidden_states = False)
-#
-#  # Tell pytorch to run this model on the GPU.
-#  model.to(device) #model.cuda()
-#  
-#  return model
+
   
 def set_seed(seed_val):
     '''

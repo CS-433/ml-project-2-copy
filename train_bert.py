@@ -7,6 +7,9 @@ from tqdm import tqdm
 from helpers_bert import *
 import time
 import datetime
+from models_bert import *
+from transformers import BertForSequenceClassification, AdamW, BertConfig
+from transformers import get_linear_schedule_with_warmup
 
 def validation(model, val_dataloader, device):
     '''
@@ -196,66 +199,63 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
             # flat train accuracy = sum of batch flat train accuracy
             total_train_accuracy += flat_accuracy(logits, label_ids)
 
-    # train accuracy = flat train accuracy / num batches
-    avg_train_accuracy = total_train_accuracy / len(train_dataloader)
-    print("  Train accuracy: {0:.4f}".format(avg_train_accuracy))
+        # train accuracy = flat train accuracy / num batches
+        avg_train_accuracy = total_train_accuracy / len(train_dataloader)
+        print("  Train accuracy: {0:.4f}".format(avg_train_accuracy))
 
-    # train loss = sum of batch losses / num batches
-    avg_train_loss = total_train_loss / len(train_dataloader)            
+        # train loss = sum of batch losses / num batches
+        avg_train_loss = total_train_loss / len(train_dataloader)            
 
-    # epoch time
-    training_time = format_time(time.time() - t0)
+        # epoch time
+        training_time = format_time(time.time() - t0)
 
-    print("")
-    print("  Average training loss: {0:.4f}".format(avg_train_loss))
-    print("  Training epochtook: {:}".format(training_time))
-
-    # save model after every epoch
-    if save_epoch:
-        file_name = PATH_DATA+'models/BERT/' + txt_header + '_epoch_'+ str(epoch_i)+'.pkl'
-        torch.save(model.state_dict(), file_name)
-
-    # validation metrics after every epoch if validate = True
-    if validate :
         print("")
-        print("Running Validation...")
+        print("  Average training loss: {0:.4f}".format(avg_train_loss))
+        print("  Training epochtook: {:}".format(training_time))
 
-        t0 = time.time()
+        # save model after every epoch
+        if save_epoch:
+            file_name = PATH_DATA+'models/BERT/' + txt_header + '_epoch_'+ str(epoch_i)+'.pkl'
+            torch.save(model.state_dict(), file_name)
 
-        # dropout and batch norm behave different during training, so activate eval mode
-        model.eval()
+        # validation metrics after every epoch if validate = True
+        if validate :
+            print("")
+            print("Running Validation...")
 
-        total_eval_accuracy = 0
-        total_eval_loss = 0
+            t0 = time.time()
 
-        total_eval_accuracy, total_eval_loss = validation(model, val_dataloader, device, total_eval_accuracy, total_eval_loss)
+            # dropout and batch norm behave different during training, so activate eval mode
+            model.eval()
 
-        avg_val_accuracy = total_eval_accuracy / len(val_dataloader)
-        print("  Accuracy: {0:.4f}".format(avg_val_accuracy))
+            total_eval_accuracy, total_eval_loss = validation(model, val_dataloader, device)
 
-        avg_val_loss = total_eval_loss / len(val_dataloader)
+            avg_val_accuracy = total_eval_accuracy / len(val_dataloader)
+            print("  Accuracy: {0:.4f}".format(avg_val_accuracy))
 
-        validation_time = format_time(time.time() - t0)
+            avg_val_loss = total_eval_loss / len(val_dataloader)
 
-        print("  Validation Loss: {0:.4f}".format(avg_val_loss))
-        print("  Validation took: {:}".format(validation_time))
-    else:
-        validation_time = 0
-        avg_val_loss = 0
-        avg_val_accuracy = 0
-        
-    # save training and validation metrics for one epoch
-    training_stats.append(
-      {
-          'epoch': epoch_i + 1,
-          'Training Loss': avg_train_loss,
-          'Training. Accur.': avg_train_accuracy,
-          'Training Time': training_time,
-          'Valid. Loss': avg_val_loss,
-          'Valid. Accur.': avg_val_accuracy,
-          'Validation Time': validation_time
-      }
-    )
+            validation_time = format_time(time.time() - t0)
+
+            print("  Validation Loss: {0:.4f}".format(avg_val_loss))
+            print("  Validation took: {:}".format(validation_time))
+        else:
+            validation_time = 0
+            avg_val_loss = 0
+            avg_val_accuracy = 0
+
+        # save training and validation metrics for one epoch
+        training_stats.append(
+          {
+              'epoch': epoch_i + 1,
+              'Training Loss': avg_train_loss,
+              'Training. Accur.': avg_train_accuracy,
+              'Training Time': training_time,
+              'Valid. Loss': avg_val_loss,
+              'Valid. Accur.': avg_val_accuracy,
+              'Validation Time': validation_time
+          }
+        )
 
     print("")
     print("Training complete!")
@@ -263,3 +263,72 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
     print("Total training took {:} (h:mm:ss)".format(format_time(time.time()-total_t0)))
 
     return training_stats
+
+
+
+'''' cross validation function'''
+def cv_bert(input_ids, attention_masks, labels, device, PATH_DATA, model_name = 'BertWithCustomClassifier'):
+    '''
+    Perform cross-validation (CV) on a BERT like model, print the scores
+    inputs:
+        model (str): model name can be :
+                -'BertWithCustomClassifier' : if you want to perform cv on the BERT model with a
+                                              custom classifier instead of the default one
+                -'BertForSequenceClassification' : if you want to perform cv on the default
+                                                   BertForSequenceClassification model
+        input_ids (tensor) : tensor containing the input ids
+        attention_masks (tensor) : tensor containing the
+        labels (tensor)  : tensor containing the labels
+        device (str) : 'cpu' or 'gpu' to speed up training
+        PATH_DATA (str) : main data path used to save the model
+        
+    outputs:
+        None
+    '''
+    full_dataset = TensorDataset(input_ids, attention_masks, labels)
+    train_ds, val_ds = train_val_split(full_dataset,proportion = 0.8)
+    train_dataloader = as_dataloader(train_ds, random = True, batch_size = 32) #DataLoader(train_ds, shuffle = True, batch_size = batch_size)
+    val_dataloader = as_dataloader(val_ds, random = False, batch_size = 32)
+    
+    for epochs in [2,3]:
+        for lr in [2e-5, 3e-5, 5e-5]:
+            
+            # initialize the model at the begging of each run
+            if model_name == 'BertWithCustomClassifier' :
+                model =  BertWithCustomClassifier(nb_hidden=500)
+            if model_name == 'BertForSequenceClassification':
+                model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
+                                                                       num_labels = 2,
+                                                                       output_attentions = False,
+                                                                       output_hidden_states = False)
+            # send the model parameters to the GPU
+            model.to(device)
+            
+            # indicate which learning rate and number of epochs is currently being tested : 
+            print('================================================================================')
+            print('===========           lr =',lr,'                num_epochs =  ', epochs,' =============')
+            print('================================================================================')
+            total_steps = len(train_dataloader) * epochs # = number of batches times epochs
+
+            optimizer = AdamW(model.parameters(), lr = lr, eps = 1e-8) # trying lr = 1e-5
+
+            scheduler = get_linear_schedule_with_warmup(optimizer,  
+                                                        num_warmup_steps = round(total_steps*0.10), 
+                                                        num_training_steps = total_steps)
+            
+            header = 'CV_'+ model_name
+            
+            training_stats = train_bert_class_with_params(train_dataloader,val_dataloader,
+                                              model, optimizer, scheduler,
+                                              epochs, random_seed=42,
+                                              device=device,
+                                              PATH_DATA=PATH_DATA,
+                                              save_N_steps=100000,
+                                              save_epoch=False,
+                                              txt_header = header ,
+                                              step_print=100000,
+                                              validate = True,
+                                              freezing = False,
+                                              freez_steps = 100,
+                                              frozen_epochs = 1)
+            print(training_stats)
