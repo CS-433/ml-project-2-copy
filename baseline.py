@@ -110,6 +110,9 @@ def naive_bayes(x, y, glove=True):
     Outputs:    
     - gnb (model): returns the naive Bayes model
     """
+    
+    # https://www.analyticsvidhya.com/blog/2021/01/gaussian-naive-bayes-with-hyperpameter-tuning/
+
     if glove :
         #if the embeddings are glove we used the method from sklearn GaussianNB() because the x passed is a numpy array
         gnb = GaussianNB()
@@ -143,6 +146,11 @@ def logistic_regression_cv(x, y, solvers = ['lbfgs', 'saga'], penalty = ['l2'], 
     - params(list) : list containing the combination of hyperparameters corresponding to each mean and std
     """ 
 
+    #https://stackoverflow.com/questions/38640109/logistic-regression-python-solvers-definitions
+    #https://scikit-learn.org/stable/modules/linear_model.html
+    #https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+    #https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html
+    #https://machinelearningmastery.com/hyperparameters-for-classification-machine-learning-algorithms/
     model = LogisticRegression()
     #creates the grid for the grid-search
     grid = dict(solver=solvers,penalty=penalty,C=c_values)
@@ -177,6 +185,9 @@ def logistic_regression(x, y, solver, penalty, c_value):
     Outputs:    
     - model (sklearn.LogisticRegression): returns the Logistic regression model trained
     """
+    #https://scikit-learn.org/stable/modules/linear_model.html
+    #https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+    #https://medium.com/data-science-group-iitr/logistic-regression-simplified-9b4efe801389
     
     #creates the model
     model = LogisticRegression(solver = solver, penalty = penalty, C=c_value)
@@ -247,6 +258,7 @@ def mlp(x, y, solver, lr, act, max_iters):
     Outputs:    
     - mlp (SKlearn.MLPClassifier) : multi-layer perceptron trained
     """
+    #https://datascience.stackexchange.com/questions/55991/in-the-context-of-deep-learning-what-is-training-warmup-steps
     mlp = MLPClassifier(random_state=1, max_iter=max_iters, solver = solver,
                     activation = act, learning_rate_init = lr,
                     early_stopping=True, n_iter_no_change=2)
