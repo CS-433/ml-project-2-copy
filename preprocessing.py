@@ -183,6 +183,9 @@ def remove_stopwords(sentence, all_stopwords):
     Outputs:    
     - no_sw (string) : string containing the sentence without the stopwords
     """
+    
+    #https://stackabuse.com/removing-stop-words-from-strings-in-python/
+
     sent_split = sentence.split(" ")  
     all_stopwords = set(all_stopwords) # set() heremakes it at least 10x faster
     sent_without_sw = [word for word in sent_split if not word in all_stopwords]
@@ -214,6 +217,8 @@ def stem_sent(sentence, stemmer):
     Outputs:
     - stemming (string) : sentence stemmed
     """
+    
+    #https://www.nltk.org/howto/stem.html
     sent_split = sentence.split(" ")
     sent = [stemmer.stem(w) for w in sent_split]
     stemming = " ".join(sent)
@@ -246,6 +251,7 @@ def remove_punct_df(df, tokenizer, col = 'Tweet'):
     Outputs:
     - df_new (Pandas.Serie) : serie containing the tweets without the punctuation
     """
+    #https://www.kite.com/python/answers/how-to-remove-all-punctuation-marks-with-nltk-in-python
     return df[col].progress_apply(lambda x :" ".join(tokenizer.tokenize(x)))
 
 
@@ -278,6 +284,7 @@ def low_occuring_words(PATH_PREPROCESSING, file_name = 'count_word_pos.txt' ):
     Outputs :
     - filter_words (list) : list containing the words that appear 5 or more times in the corpus
     """
+    #https://www.geeksforgeeks.org/python-count-occurrences-of-each-word-in-given-text-file-using-dictionary/
     d = dict()
     txt = open(PATH_PREPROCESSING + file_name, "r")
     for line in txt:
@@ -295,9 +302,7 @@ def low_occuring_words(PATH_PREPROCESSING, file_name = 'count_word_pos.txt' ):
                 d[word] = d[word] + 1
             else:
                 # Add the word to dictionary with count 1
-                d[word] = 1
-  
-    print('accounted' + str(d['accounted']))
+                d[word] = 1  
     #Takes word only if they appear more than 5 times
     filter_words = [word for word, count in d.items() if count>=5]
     return filter_words
@@ -354,4 +359,26 @@ def preprocessing(df, contraction_list, stemmer, filter_words, slang_list, all_s
     df['Tweet'] = remove_punct_df(df, tokenizer)
     df['Tweet'] = remove_low_words_df(df, lst = filter_words, col = 'Tweet' )
     return df
+
+
+
+"""
+N-Grams
+"""
+
+
+
+def generate_N_grams(words, ngram=1):
+    """
+    Method to generate the N_grams of each word
+    Inputs :
+    - word (list) : list of words in a tweet
+    - ngram (int) : number of ngrams to generate by default to 1
+    Outpus :
+    - ans (list) : list containing the words and their n-gram
+    """
+    #https://www.analyticsvidhya.com/blog/2021/09/what-are-n-grams-and-how-to-implement-them-in-python/
+    temp=zip(*[words[i:] for i in range(0,ngram)])
+    ans=[' '.join(ngram) for ngram in temp]
+    return ans
     
