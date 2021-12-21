@@ -26,7 +26,7 @@ def make_submission_glove(test_x, name, model):
     predictions_test = model.predict(test_x)
     
     #creates the ids of the test
-    ids = np.arange(test_x.shape[1])+1
+    ids = np.arange(test_x.shape[0])+1
     
     #changes labels of 0 to -1 for tweets predicted as negative
     predictions_test[predictions_test==0] = -1
