@@ -8,21 +8,22 @@ from helpers_bert import *
 import time
 import datetime
 
-def validation(model, val_dataloader, device, total_eval_accuracy = 0, total_eval_loss = 0):
+def validation(model, val_dataloader, device):
     '''
     Returns validation accuracy and loss 
     
     inputs:
-        model (nn.Module)
-        val_dataloader (Dataloader)
-        device (string)
-        total_eval_accuracy ()
-        total_eval_loss ()
+        model (nn.module) : the model to be validated (BERTforsequencclassification or BertWithCustomClassifier)
+        val_dataloader (Pytorch Dataloader or bool) : validation dataloader, can be set to None if only training
+                                                      desired
+        device (str) : 'cpu' or 'gpu' to speed up training
     
     outputs:
-        total_eval_accuracy () validation accuracy
-        total_eval_loss () validation loss
+        total_eval_accuracy (float) : validation accuracy
+        total_eval_loss (float) : validation loss
     '''
+    total_eval_accuracy = 0
+    total_eval_loss = 0
     # evaluation metrics by batch for better performance
     for batch in tqdm(val_dataloader):
        
@@ -74,12 +75,14 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
     https://github.com/huggingface/transformers/blob/5bfcd0485ece086ebcbed2d008813037968a9e58/examples/run_glue.py#L128
     
     Inputs: 
-        train_dataloader
-        val_dataloader (Dataloader or bool)
-        model (nn.module)
-        optimizer () : 
-        scheduler () : 
-                        (Can be set to None is validation is set to None)
+        train_dataloader(Pytorch Dataloader) : data loader for the training data
+        val_dataloader (Pytorch Dataloader or bool) : validation dataloader, can be set to None if only training
+                                                      desired
+        model (nn.module) : the model to be trained (BERTforsequencclassification or BertWithCustomClassifier)
+        optimizer () : optimizer from transformers library, such as AdamW
+        scheduler () : hugging face scheduler such as the one obtained from 'get_linear_schedule_with_warmup'
+                       https://huggingface.co/docs/transformers/main_classes/optimizer_schedules#transformers.SchedulerType
+                       (Can be set to None if validation is set to None)
         epochs (int) : number of epoche
         random_seed (int) : seed so that the training is reproducile
         device (str) : 'cpu' or 'gpu' to speed up training
@@ -96,7 +99,7 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
         frozen_epochs (bool) : number of epochs during which the BERT layers are frozen
     
     Outputs:
-        training_stats (dict) : contains train/validatin loss/accuracy and train/val time for every epoch 
+        training_stats (list) : list of dicts that contain train/validatin loss/accuracy and train/val time for every epoch 
     '''
     # seeds so that experiment is reproductible
     random.seed(random_seed)
