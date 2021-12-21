@@ -3,7 +3,7 @@ from torch import nn
 from transformers import BertForSequenceClassification
 from tqdm import tqdm
 
-class outputclass(nn.Module): # nn.Module required or gradients won't flow (I think, it didn't work without it anyways)
+class outputclass(nn.Module): # nn.Module required or gradients won't flow
     '''
     Used so that loss and logits can be called as class attributes of the 
     output of our bert model+classifier.
