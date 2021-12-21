@@ -66,6 +66,9 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
                                  frozen_epochs = 1):
     '''
     
+    
+    
+    Inputs: 
     train_dataloader
     val_dataloader (Dataloader or bool)
     model (nn.module)
@@ -86,6 +89,8 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
     freezing (bool)
     freez_steps (int)
     frozen_epochs (bool)
+    
+    Outputs:
     
     '''
     # seeds so that experiment is reproductible

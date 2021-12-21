@@ -3,4 +3,16 @@ conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 pip install -U scikit-learn
 conda install jupyterlab nb_conda_kernels
 pip install --user -U nltk
+
 conda install -c conda-forge ipywidgets
+
+# To add tqdm and nltk to path  :
+# https://stackoverflow.com/questions/51022464/message-poping-up-while-installing-python-packages
+# https://stackoverflow.com/questions/51022464/message-poping-up-while-installing-python-packages
+'''
+Add c:\program files\python36\Scripts to your Windows environment PATH variable.
+
+You can do this by pressing Win+R (opens up the run command window) and executing sysdm.cpl. The adavanced system settings window pops up where you then click on the Advanced tab and hit the button labeled Environment variables. Now you have two sections in front of you: the user variables and the system variables. I'd almost always advise you to only make changes in your user variables so you won't change any system or other users' settings. If you don't already have a PATH variable in your user variables section, create one by clicking New. Else edit the existing one by hitting Edit and change it to
+
+c:\program files\python36\Scripts;%PATH%;<whatever else was here>
+'''
