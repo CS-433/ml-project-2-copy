@@ -33,7 +33,7 @@ To run our best performing model, the script run.py must be ran having
 
 ## Contents of the Project
 - ```3_2_BERT_models.ipynb``` contains the pipeline we used for the BERT models
-- ```EDA.ipynb``` contains the steps we used for the pre-processing
+- ```EDA.ipynb``` contains the code we used to generate Figure 1 from the report
 - ```baseline.py``` contains the functions used to train and fit our baseline models
 - ```embeddings.py``` contains the functions used to obtain the embeddings for the models
 - ```helpers.py``` contains helper functions
