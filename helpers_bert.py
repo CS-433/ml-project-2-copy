@@ -32,7 +32,7 @@ def load_test_data(path_test_data = './data/twitter-datasets/test_data.txt' , ma
     
     return test_dataloader 
 
-def load_model(device, path_model='./data/models/BERT/model.pkl' ,
+def load_model_disk(device, path_model='./data/models/BERT/model.pkl' ,
                model_name = 'BertWithCustomClassifier'):
     '''
     Load a BERT like model from disc
@@ -58,6 +58,32 @@ def load_model(device, path_model='./data/models/BERT/model.pkl' ,
     model.load_state_dict(torch.load(path_model))
     # put model in eval mode
     model.eval()
+    
+    # Tell pytorch to run this model on the GPU.
+    model.to(device) #model.cuda()
+
+    return model
+
+def load_model(device,
+               model_name = 'BertWithCustomClassifier'):
+    '''
+    Load a BERT like model from disc
+    
+    Inputs:
+        device
+        model_name (str) 'BertWithCustomClassifier' or 'BertForSequenceClassification'
+    
+    Outputs:
+        model (nn.Module) : desired model (either BertWithCustomClassifier or BertForSequenceClassification)
+    '''
+      # Load pretrained BERT model with single linear classification layer on top. 
+    if model_name == 'BertWithCustomClassifier' :
+        model =  BertWithCustomClassifier(nb_hidden=500)
+    if model_name == 'BertForSequenceClassification':
+        model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
+                                                               num_labels = 2,
+                                                               output_attentions = False,
+                                                               output_hidden_states = False)
     
     # Tell pytorch to run this model on the GPU.
     model.to(device) #model.cuda()

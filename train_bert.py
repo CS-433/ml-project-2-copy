@@ -98,6 +98,8 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
         step_print (int) : print time each N steps ( N=0 disables it)
         validate (bool) : run validation or not
         freezing (bool) : freez BERT layers for freez_steps steps and frozen_epochs epochs ( classifier remains unfrozen)
+                          --> ONLY USE FREEZING IF MODEL IS BertWithCustomClassifier, BERTforsequencclassification doesn't have
+                          the option
         freez_steps (int) : number of steps during which the BERT layers are frozen
         frozen_epochs (bool) : number of epochs during which the BERT layers are frozen
     

@@ -35,7 +35,7 @@ def main():
     PATH_PREPROCESSING = PATH_DATA + 'preprocessing/'
     # replace this with the path where you save the model file, ideally in a subdirectory
     # of where you placed run.py
-    path_model = PATH_DATA+'models/BERT/BERT_custom_classifier_smallds_epoch_1.pkl'
+    path_model = PATH_DATA+'models/BERT/best_submission_bert.pkl'
     path_test_data = PATH_DATA + 'twitter-datasets/test_data.txt'
     path_submission = PATH_DATA + 'submissions/output_run_py_submission.csv'
     ###
@@ -47,7 +47,7 @@ def main():
     device = gpu_cpu_setup()
     
     # load the model with the trained parameters from disk
-    model = load_model(device, path_model, model_name = 'BertWithCustomClassifier')
+    model = load_model_disk(device, path_model, model_name = 'BertForSequenceClassification')
     
     # load the test data, tokenize it and put into a dataloader
     test_dataloader = load_test_data(path_test_data, max_len=40)
