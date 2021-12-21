@@ -10,18 +10,18 @@ import datetime
 
 def validation(model, val_dataloader, device, total_eval_accuracy = 0, total_eval_loss = 0):
     '''
-    returns validation accuracy and loss 
+    Returns validation accuracy and loss 
     
     inputs:
-    model (nn.Module)
-    val_dataloader (Dataloader)
-    device (string)
-    total_eval_accuracy ()
-    total_eval_loss ()
+        model (nn.Module)
+        val_dataloader (Dataloader)
+        device (string)
+        total_eval_accuracy ()
+        total_eval_loss ()
     
     outputs:
-    total_eval_accuracy () validation accuracy
-    total_eval_loss () validation loss
+        total_eval_accuracy () validation accuracy
+        total_eval_loss () validation loss
     '''
     # evaluation metrics by batch for better performance
     for batch in tqdm(val_dataloader):
@@ -65,33 +65,38 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
                                  freez_steps = 100,
                                  frozen_epochs = 1):
     '''
+    Train function used for the two models : BERTforsequencclassification and our
+    version with a custom classifier (BertWithCustomClassifier). This train function
+    can freez part of the bert model, save the model every N steps, at the end of every epoch, and
+    can perform validation or not.
     
-    
+    This training code is based on the `run_glue.py` script here:
+    https://github.com/huggingface/transformers/blob/5bfcd0485ece086ebcbed2d008813037968a9e58/examples/run_glue.py#L128
     
     Inputs: 
-    train_dataloader
-    val_dataloader (Dataloader or bool)
-    model (nn.module)
-    optimizer 
-    scheduler
-    epochs
-    random_seed
-    device
-    PATH_DATA
-    save_N_steps (bool)
-    save_epoch (bool)
-    txt_header = 'random'
-    step_print = 100
-    validate (bool)
-    save_N_steps=False : don't save model every N steps
-    save_N_steps=10000 : save model every 10000 steps
-    save_epoch (bool) : save the model to drive at the end of every epoch
-    freezing (bool)
-    freez_steps (int)
-    frozen_epochs (bool)
+        train_dataloader
+        val_dataloader (Dataloader or bool)
+        model (nn.module)
+        optimizer () : 
+        scheduler () : 
+                        (Can be set to None is validation is set to None)
+        epochs (int) : number of epoche
+        random_seed (int) : seed so that the training is reproducile
+        device (str) : 'cpu' or 'gpu' to speed up training
+        PATH_DATA (str) : main data path used to save the model
+        save_N_steps (int) : save the model avec N steps
+            save_N_steps = False : don't save model every N steps
+            save_N_steps = N (type = int) : save model every N steps
+        save_epoch (bool) : save the model to disk at the end of every epoch
+        txt_header (str) : str that is appened to the model file name
+        step_print (int) : print time each N steps ( N=0 disables it)
+        validate (bool) : run validation or not
+        freezing (bool) : freez BERT layers for freez_steps steps and frozen_epochs epochs ( classifier remains unfrozen)
+        freez_steps (int) : number of steps during which the BERT layers are frozen
+        frozen_epochs (bool) : number of epochs during which the BERT layers are frozen
     
     Outputs:
-    
+        training_stats (dict) : contains train/validatin loss/accuracy and train/val time for every epoch 
     '''
     # seeds so that experiment is reproductible
     random.seed(random_seed)
@@ -106,12 +111,12 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
     total_t0 = time.time()
 
     for epoch_i in range(0, epochs):
-          
+        
         print("")
         print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, epochs))
         print('Training...')
-
-        # begging of each epoch timer
+        
+        # beggining of each epoch timer
         t0 = time.time()
 
         # reset epoch loss to 0
@@ -236,7 +241,7 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
         avg_val_loss = 0
         avg_val_accuracy = 0
         
-    # save training and validation metric for one epoch
+    # save training and validation metrics for one epoch
     training_stats.append(
       {
           'epoch': epoch_i + 1,

@@ -16,3 +16,5 @@ You can do this by pressing Win+R (opens up the run command window) and executin
 
 c:\program files\python36\Scripts;%PATH%;<whatever else was here>
 '''
+
+pip install transformers
