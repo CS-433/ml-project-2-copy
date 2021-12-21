@@ -4,6 +4,14 @@ from tqdm import tqdm
 import torch
 
 def get_text_label_values(df):
+    '''
+    Return the text and labels separately from the dataframe containing both
+    Input
+        df (Dataframe): dataframe containing the tweets and the labels
+    outputs
+        tweets  (np.ndarray) : containing a string in each cell that is the tweet
+        labels (np.ndarray)  : the labels corresponding to each tweet
+    '''
     tweets = df.text.values
     labels = df.label.values
     return tweets, labels
