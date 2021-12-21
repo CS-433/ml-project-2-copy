@@ -13,9 +13,16 @@ from transformers import get_linear_schedule_with_warmup
 import pandas as pd
 from preprocessing_bert import *
 
-def load_test_data(PATH_DATA, max_len=40):
+def load_test_data(path_test_data = './data/twitter-datasets/test_data.txt' , max_len=40):
+    '''
+    load the test data from disk
     
-    df_test = pd.read_fwf(PATH_DATA + 'twitter-datasets/test_data.txt', header = None, names = ['Tweet'], colspecs = [(0,280)])
+    inputs : 
+        path_test_data ()
+    outputs :
+        max_len ()
+    '''
+    df_test = pd.read_fwf(path_test_data, header = None, names = ['Tweet'], colspecs = [(0,280)])
     df_test.rename(columns={"Tweet": "text"},inplace=True)
     input_ids, attention_masks = tokenize_with_autotokenizer_test(df_test, max_len=40)
     
@@ -25,8 +32,8 @@ def load_test_data(PATH_DATA, max_len=40):
     
     return test_dataloader 
 
-
-def load_model(device, PATH_DATA, path_model, model_name = 'BertWithCustomClassifier'):
+def load_model(device, path_model='./data/models/BERT/model.pkl' ,
+               model_name = 'BertWithCustomClassifier'):
     '''
     Load a BERT like model from disc
     
@@ -97,10 +104,7 @@ def as_dataloader(dataset, batch_size = 32, random = True):
         return DataLoader(dataset, sampler = RandomSampler(dataset),batch_size = batch_size)
     else:
         return DataLoader(dataset, sampler = SequentialSampler(dataset),batch_size = batch_size)
-    
-# Currently not used but could be in the future
 
-  
 def set_seed(seed_val):
     '''
     Function to set the seed
@@ -115,7 +119,7 @@ def set_seed(seed_val):
     torch.manual_seed(seed_val)
     torch.cuda.manual_seed_all(seed_val)
 
-# Function to compute the accuracy of our predictions vs labels
+
 def flat_accuracy(preds, labels):
     '''
     Returnes the flat accuracy between preds and labels
@@ -146,7 +150,7 @@ def format_time(elapsed):
     # Format as hh:mm:ss
     return str(datetime.timedelta(seconds=elapsed_rounded))
 
-def make_prediction(model, test_dataloader,device):
+def make_prediction(model, test_dataloader, device='cpu'):
     '''
     Take the model, test dataloader and device and uses the model to
     predict the outcome of every batch.
@@ -156,7 +160,8 @@ def make_prediction(model, test_dataloader,device):
         test_dataloader (DataLoader)
         device
     Outputs :
-        
+        y_pred_flat :
+        ids : 
     
     '''
     prediction = []
@@ -205,7 +210,7 @@ def pred_sanity_checks(y_pred):
     print(y_pred[0:15])
     print('unique values', np.unique(y_pred))
 
-def create_csv_submission(ids, y_pred, name):
+def create_csv_submission(ids, y_pred, name = './data/submissions/output.csv' ):
     """
     Creates an output file in .csv format for submission to Kaggle or AIcrowd
     Arguments: ids (event ids associated with each prediction)
@@ -222,7 +227,8 @@ def create_csv_submission(ids, y_pred, name):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
 
 ''' for loading and saving'''
-def save_tokenize(input_ids, attention_masks, labels, PATH_PREPROCESSING,small_dataset=1):
+
+def save_tokenize(input_ids, attention_masks, labels, PATH_PREPROCESSING='./data/preprocessing/',small_dataset=1):
     '''
     Save the input_ids, attention masks, and labels of the tokenized tweets to disk for later use
     
@@ -247,7 +253,7 @@ def save_tokenize(input_ids, attention_masks, labels, PATH_PREPROCESSING,small_d
         torch.save(attention_masks, PATH_PREPROCESSING +'attention_masks_custombert_full.pkl', _use_new_zipfile_serialization=True)
         torch.save(labels, PATH_PREPROCESSING +'labels_custombert_full.pkl', _use_new_zipfile_serialization=True)
 
-def load_tokenize( PATH_PREPROCESSING,small_dataset=1):
+def load_tokenize( PATH_PREPROCESSING='./data/preprocessing/',small_dataset=1):
 
     '''
     load the input_ids, attention masks, and labels of the tokenized tweets from disk

@@ -63,12 +63,12 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
                                  optimizer, scheduler, epochs, random_seed, device,
                                  PATH_DATA,
                                  save_N_steps=False, save_epoch=False,
-                                 txt_header = 'random',step_print=100,
+                                 save_path = './data/models/BERT/model',step_print=100,
                                  validate = True,
                                  freezing = False,
                                  freez_steps = 100,
                                  frozen_epochs = 1):
-    '''
+    ''' 
     Train function used for the two models : BERTforsequencclassification and our
     version with a custom classifier (BertWithCustomClassifier). This train function
     can freez part of the bert model, save the model every N steps, at the end of every epoch, and
@@ -188,7 +188,7 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
             if save_N_steps:
                 # save the model each save_N_steps steps
                 if (step % save_N_steps) == 0 and not step == 0:
-                    file_name = PATH_DATA+'models/BERT/' + txt_header + '_epoch_'+ str(epoch_i)+'_step_'+ str(step) +'.pkl'
+                    file_name = save_path + '_epoch_'+ str(epoch_i)+'_step_'+ str(step) +'.pkl'
                     torch.save(model.state_dict(), file_name)
                     # print('  Model saved')
 
@@ -215,7 +215,7 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
 
         # save model after every epoch
         if save_epoch:
-            file_name = PATH_DATA+'models/BERT/' + txt_header + '_epoch_'+ str(epoch_i)+'.pkl'
+            file_name = save_path + '_epoch_'+ str(epoch_i)+'.pkl'
             torch.save(model.state_dict(), file_name)
 
         # validation metrics after every epoch if validate = True
@@ -267,7 +267,7 @@ def train_bert_class_with_params(train_dataloader, val_dataloader, model,
 
 
 '''' cross validation function'''
-def cv_bert(input_ids, attention_masks, labels, device, PATH_DATA, model_name = 'BertWithCustomClassifier'):
+def cv_bert(input_ids, attention_masks, labels, device, PATH_DATA='./data/', model_name = 'BertWithCustomClassifier'):
     '''
     Perform cross-validation (CV) on a BERT like model, print the scores
     inputs:
@@ -325,7 +325,7 @@ def cv_bert(input_ids, attention_masks, labels, device, PATH_DATA, model_name = 
                                               PATH_DATA=PATH_DATA,
                                               save_N_steps=100000,
                                               save_epoch=False,
-                                              txt_header = header ,
+                                              save_path = './data/models/BERT/model',
                                               step_print=100000,
                                               validate = True,
                                               freezing = False,

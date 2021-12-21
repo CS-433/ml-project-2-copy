@@ -27,26 +27,36 @@ from helpers import *
 
 
 def main():
+    '''
     
+    '''
+    ### PATHS
     PATH_DATA = './data/'
     PATH_PREPROCESSING = PATH_DATA + 'preprocessing/'
-
+    # replace this with the path where you save the model file, ideally in a subdirectory
+    # of where you placed run.py
+    path_model = PATH_DATA+'models/BERT/BERT_custom_classifier_smallds_epoch_1.pkl'
+    path_test_data = PATH_DATA + 'twitter-datasets/test_data.txt'
+    path_submission = PATH_DATA + 'submissions/output_run_py_submission.csv'
+    ###
+    
+    # progress bars
     tqdm.pandas()
     
+    # setup the device : gpu if available otherwise cpu 
     device = gpu_cpu_setup()
     
-    file_name='BERT/BERT_custom_classifier_smallds_epoch_0'
-    path_model = PATH_DATA+'models/'+file_name+'.pkl'
-
-    model = load_model(device, PATH_DATA, path_model, model_name = 'BertWithCustomClassifier')
+    # load the model with the trained parameters from disk
+    model = load_model(device, path_model, model_name = 'BertWithCustomClassifier')
     
-    test_dataloader = load_test_data(PATH_DATA, max_len=40)
+    # load the test data, tokenize it and put into a dataloader
+    test_dataloader = load_test_data(path_test_data, max_len=40)
     
+    # make the prediction on the test data using the loaded model
     y_pred, ids = make_prediction(model, test_dataloader,device)
     
-    name = 'run_py_submission'
-    create_csv_submission(ids, y_pred, PATH_DATA + 'submissions/output_' + name + '.csv' )
-
+    # create the submission csv file
+    create_csv_submission(ids, y_pred, path_submission )
 
 
 if __name__ == '__main__':

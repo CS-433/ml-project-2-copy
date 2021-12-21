@@ -58,10 +58,11 @@ class BertWithCustomClassifier(nn.Module):
         
         # Replacing the default classifier layer with our own: 
         # https://github.com/huggingface/transformers/issues/1001
+        # inspired from roberta's classifier https://github.com/huggingface/transformers/blob/19e5ed736611227b004c6f55679ce3536db3c28d/src/transformers/models/roberta/modeling_roberta.py#L1443
         self.bert.classifier = nn.Sequential( 
           nn.Dropout(p=dropout_p),
           nn.Linear(768,nb_hidden),
-          nn.Tanh(), # inspired from roberta's classifier
+          nn.Tanh(), 
           nn.Dropout(p=dropout_p), 
           nn.Linear(nb_hidden,2),
         )
@@ -82,7 +83,7 @@ class BertWithCustomClassifier(nn.Module):
         # calling our outputclass to format the output the same way as BERTforsequenceclassification
         return self.outputclass 
         
-    def freeze_bert(self, freeze=True): # 
+    def freeze_bert(self, freeze=True): 
         """
         Only freez the bert layers so classifier can be trained
         Inputs
