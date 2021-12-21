@@ -10,7 +10,20 @@ def get_text_label_values(df):
 
 ''' Tokenizers'''
 def tokenize_with_encode_plus(df, max_len=140):
-
+    ''''
+    Tokenize tweets using the BERT pretrained tokenizer.
+    Uses the encode_plus function for tokenization.
+    
+    inputs:
+        df (DataFrame) : dataframe containing the tweets and labels
+        max_len : maximum length in tokens to keep ( so only max_len-2 tokens of the tweet will be kept,
+                  because two tokens are used to indicate the beggining and end of the sequence)
+    outputs:
+        input_ids (tensor) : tensor containing the input ids
+        attention_masks (tensor) : tensor containing the
+        labels (tensor)  : tensor containing the labels
+    
+    '''
     # take the text and label from dataframe
     tweets, labels = get_text_label_values(df)
     # initialize container variables
@@ -39,6 +52,20 @@ def tokenize_with_encode_plus(df, max_len=140):
     return input_ids, attention_masks, labels
 
 def tokenize_with_autoencoder(df, max_len=140):
+    ''''
+    Tokenize tweets using the BERT pretrained tokenizer.
+    Uses the only the tokenizer function for tokenization, slighty faster than using encode_plus
+    
+    inputs:
+        df (DataFrame) : dataframe containing the tweets and labels
+        max_len : maximum length in tokens to keep ( so only max_len-2 tokens of the tweet will be kept,
+                  because two tokens are used to indicate the beggining and end of the sequence)
+    outputs:
+        input_ids (tensor) : tensor containing the input ids
+        attention_masks (tensor) : tensor containing the
+        labels (tensor)  : tensor containing the labels
+    
+    '''
 
     tweets, labels = get_text_label_values(df)
     input_ids, attention_masks = [], []
@@ -61,6 +88,19 @@ def tokenize_with_autoencoder(df, max_len=140):
     return input_ids, attention_masks, labels
 
 def tokenize_with_autotokenizer_test(df, max_len=140):
+    ''''
+    Tokenize tweets using the BERT pretrained tokenizer for the dataset, so this time we don't have labels.
+    Uses the only the tokenizer function for tokenization, slighty faster than using encode_plus
+    
+    inputs:
+        df (DataFrame) : dataframe containing the tweets and labels
+        max_len : maximum length in tokens to keep ( so only max_len-2 tokens of the tweet will be kept,
+                  because two tokens are used to indicate the beggining and end of the sequence)
+    outputs:
+        input_ids (tensor) : tensor containing the input ids
+        attention_masks (tensor) : tensor containing the
+
+    '''
     tweets = df.text.values
     input_ids, attention_masks = [], []
     tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')

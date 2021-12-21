@@ -125,7 +125,7 @@ def make_prediction(model, test_dataloader,device):
             b_labels = batch[2].to(device)
             with torch.no_grad():        
                 outputs = model(b_input_ids, 
-                                      token_type_ids=None, # DONT FORGET to fix this line, not requirte for BERT but required for BERT+custom
+                                      token_type_ids=None,
                                       attention_mask=b_input_mask
                                       ,labels=b_labels)
 
