@@ -27,8 +27,20 @@ In order to run the notebooks, run the following command when the environnement 
 ```conda install -c conda-forge ipywidgets```
 
 ## How to Use
-To run our best performing model, the script run.py must be ran having 
-//the files test.csv and train.csv in a folder Data. The predictions will be generated in an output.csv file.
+To run our best performing model, the script run.py must be ran having the same structure as in the github file meaning :
+  - in the folder data/models/BERT both files :
+          - best_submission_bert_custom.pkl
+          - best_submission_bert.pkl
+  - in the folder data/twitter-datasets/
+          - test_data.csv
+          - train_pos.csv
+          - train_neg.csv
+          - train_pos_full.csv
+          - train_neg_full.csv
+
+This will create a csv output file containing our predictions.
+
+On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
 
 ## Contents of the Project
