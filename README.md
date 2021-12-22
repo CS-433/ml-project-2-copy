@@ -47,6 +47,7 @@ On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 ## Contents of the Project
 - ```BERT_models.ipynb``` contains the pipeline we used for the BERT models
 - ```EDA.ipynb``` contains the code we used to generate Figure 1 from the report
+- `graph_BERT.ipynb` contains the code to produce the Figure 2 from the report
 - ```baseline.py``` contains the functions used to train and fit our baseline models
 - ```embeddings.py``` contains the functions used to obtain the embeddings for the models
 - ```helpers.py``` contains helper functions
