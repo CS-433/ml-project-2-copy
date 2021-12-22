@@ -38,7 +38,7 @@ To run our best performing model, the script run.py must be ran having the same 
           - train_pos_full.csv
           - train_neg_full.csv
 
-Since the two .pkl file are too big for github we uploaded them on an external google drive here : [drive link] (https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
+Since the two .pkl file are too big for github we uploaded them on an external google drive here : [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
 This will create a csv output file containing our predictions.
 
 On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
