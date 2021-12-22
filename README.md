@@ -45,7 +45,7 @@ On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
 To reproduce our other results, you must :
 - first preprocess the tweets using the function `preprocessing` from `preprocessing.py`
-- Transform the tweets in to numbers (embed them) source file : `embeddings.py`
+- Transform the tweets into number vectors (embed them) using functions in `embeddings.py` :
   - Glove :
     - load the model with `load_glove_model` 
     - use clean `clean_cols` to remove unused columns 
