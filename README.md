@@ -43,14 +43,18 @@ This will create a csv output file containing our predictions.
 
 If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb`
 
+
 On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
-To reproduce our other results, you must :
-- first preprocess the tweets using the function `preprocessing` from `preprocessing.py`
+To reproduce our other results, you can start by openning `preprocessing_embedding_baseline_example` and following the next step (all the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
+- additionally to the packages you must install at the beggingin of `BERT_models.ipynb` install gensim using `pip install gensim`
+- first preprocess the tweets using the function `preprocessing` from `preprocessing.py` ( on train_pos and train_neg, some additional files required to run the functions are provided in our repo)
 - Transform the tweets into number vectors (embed them) using functions in `embeddings.py` :
   - Glove :
-    - load the model with `load_glove_model` 
-    - use clean `clean_cols` to remove unused columns 
+    - make sure you have download all the files in data directory 
+      - `glove-twitter-25.gz` was too large to host on github so we host on google drive : [link](https://drive.google.com/file/d/1aWogx_xnky0c9gE_avHuRr__8zZNO1Us/view?usp=sharing) 
+    - load the model with `load_glove_model`
+    - use clean `clean_cols` to remove unused columns
     - use `df_to_numpy_features` to obtain a numpy matrix containing the features and one that contains the labels
     - normalize the features using `standardize_cols`
   - TF-IDF :
