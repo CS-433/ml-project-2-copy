@@ -41,7 +41,7 @@ To run our best performing model, the script run.py must be ran having the same 
 Since the two .pkl file are too big for github we uploaded them on an external google drive here : [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
 This will create a csv output file containing our predictions.
 
-If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
+If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with a P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
 
 On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
