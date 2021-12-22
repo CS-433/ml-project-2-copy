@@ -13,35 +13,41 @@ from transformers import get_linear_schedule_with_warmup
 import pandas as pd
 from preprocessing_bert import *
 
-def load_test_data(path_test_data = './data/twitter-datasets/test_data.txt' , max_len=40):
+def load_test_data(path_test_data = './data/twitter-datasets/test_data.txt' , max_len=140):
     '''
-    load the test data from disk
+    load the test data from disk and tokenize it, return test_dataloader that can be used
+    by the function make_prediction
     
+    Use max_len
     inputs : 
-        path_test_data ()
+        path_test_data (str) : path of test data file
     outputs :
-        max_len ()
+        max_len (int) : maximum number of tokens for tokenized test data
     '''
     df_test = pd.read_fwf(path_test_data, header = None, names = ['Tweet'], colspecs = [(0,280)])
     df_test.rename(columns={"Tweet": "text"},inplace=True)
-    input_ids, attention_masks = tokenize_with_autotokenizer_test(df_test, max_len=40)
-    
-    # using dummy labels to keep the same format
+    input_ids, attention_masks = tokenize_with_autotokenizer_test(df_test, max_len=max_len)
+
+    # torch.ones : using dummy labels to keep the same format 
+    # (the labels made with torch.ones are meaningless here, we just didn't want to duplicate another function here)
     test_dataset = TensorDataset(input_ids, attention_masks, torch.ones(10000).long())
     test_dataloader = as_dataloader(test_dataset, batch_size = 32, random = False) 
     
     return test_dataloader 
 
-def load_model_disk(device, path_model='./data/models/BERT/model.pkl' ,
-               model_name = 'BertWithCustomClassifier'):
+def load_model_disk(device, path_model='./data/models/BERT/model.pkl', 
+                    model_name = 'BertWithCustomClassifier'):
     '''
     Load a BERT like model from disc
     
     Inputs:
-        device
-        PATH_DATA
-        path_model
-        model_name (str) 'BertWithCustomClassifier' or 'BertForSequenceClassification'
+        device (str) : 'cpu' or 'gpu' to speed up training
+        path_model (str) : path where the model was saved ( make sure to select model_name accordingly, as the model
+                           needs to be initialised correctly before beging load, for example:
+                               - best_submission_bert.pkl is a 'BertForSequenceClassification' model so use that as model name
+                               - best_submission_bert_custom.pkl is a 'BertWithCustomClassifier' model so use that as model name
+                               
+        model_name (str) : 'BertWithCustomClassifier' or 'BertForSequenceClassification' to select which model to load
     
     Outputs:
         model (nn.Module) : desired model (either BertWithCustomClassifier or BertForSequenceClassification)
@@ -56,11 +62,12 @@ def load_model_disk(device, path_model='./data/models/BERT/model.pkl' ,
                                                                output_hidden_states = False)
     
     model.load_state_dict(torch.load(path_model))
-    # put model in eval mode
+    
+    # put model in eval mode (dropout and batchnorm layers behave differently, e.g. dropout is turned off in eval)
     model.eval()
     
-    # Tell pytorch to run this model on the GPU.
-    model.to(device) #model.cuda()
+    # Tell pytorch to run this model on the chosen device ( ideally GPU.)
+    model.to(device)
 
     return model
 
@@ -76,17 +83,19 @@ def load_model(device,
     Outputs:
         model (nn.Module) : desired model (either BertWithCustomClassifier or BertForSequenceClassification)
     '''
-      # Load pretrained BERT model with single linear classification layer on top. 
+      
     if model_name == 'BertWithCustomClassifier' :
+        # load bert where we replaced the classifier layer with a custom classifier 
         model =  BertWithCustomClassifier(nb_hidden=500)
     if model_name == 'BertForSequenceClassification':
+        # Load pretrained BERT model with single linear classification layer on top. 
         model = BertForSequenceClassification.from_pretrained("bert-base-uncased",
                                                                num_labels = 2,
                                                                output_attentions = False,
                                                                output_hidden_states = False)
     
-    # Tell pytorch to run this model on the GPU.
-    model.to(device) #model.cuda()
+    # Tell pytorch to run this model on the chosen device ( ideally GPU.)
+    model.to(device)
 
     return model
 
@@ -124,8 +133,8 @@ def as_dataloader(dataset, batch_size = 32, random = True):
     Outputs : 
         DataLoader object
     '''
-  # batch size should be 16 or 32 according to BERT authors
-  # random determines id the batches will be selected ransomly or sequentially
+    # batch size should be 16 or 32 according to BERT authors
+    # random(bool) determines if the batches will be selected randomly or sequentially
     if(random):
         return DataLoader(dataset, sampler = RandomSampler(dataset),batch_size = batch_size)
     else:

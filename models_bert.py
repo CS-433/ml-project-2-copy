@@ -40,11 +40,9 @@ class BertWithCustomClassifier(nn.Module):
             attention_mask (tensor) : batch of attention masks
             labels (tensor) : batch of labels
         
-        Outputs
+    Outputs:
         freeze_bert : freezes all parameters that are not in the classification head
             freeze (bool) : True = freez the parameters ; False = don't
-        
-    
     """
     def __init__(self, nb_hidden=500):
         super().__init__()
@@ -90,7 +88,7 @@ class BertWithCustomClassifier(nn.Module):
             freeze(bool) : True = freeze the parameters; False = don't
         
         outputs:
-        None
+            None
         """
         for param in self.bert.bert.parameters(): # from: https://github.com/huggingface/transformers/issues/400
             param.requires_grad = (not freeze)
