@@ -55,7 +55,7 @@ def main():
     device = gpu_cpu_setup()
     
     # load the model with the trained parameters from disk
-    print('FINAL TEST 2')
+
     # if loading model_1 (our BEST model) use this line : 
     model = load_model_disk(device, path_model_1, model_name = 'BertForSequenceClassification')
     
