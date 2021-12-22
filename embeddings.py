@@ -2,7 +2,7 @@ import numpy as np
 import os 
 import nltk
 import pandas as pd
-
+import gensim.downloader as api
 """
 GloVe embeddings
 """
@@ -14,14 +14,14 @@ from gensim.downloader import base_dir
 
 tokenizer = nltk.RegexpTokenizer(r"\w+")
 
-def load_glove_model():
+def load_glove_model(path_pretrained_embeddings = 'data/twitter-datasets/glove-twitter-25.gz'):
     ''' 
     This loads the 25 dim embeddings models
     Inputs :
     Outputs :
     - model (KeyedVectors) : contains the 25 dim embeddings model
     '''
-    path = os.path.join('Data/twitter-datasets/glove-twitter-25.gz')
+    path = os.path.join('data/twitter-datasets/glove-twitter-25.gz')
     model = KeyedVectors.load_word2vec_format(path)
     return model
 

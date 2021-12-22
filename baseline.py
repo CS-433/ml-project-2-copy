@@ -173,7 +173,7 @@ def logistic_regression_cv(x, y, solvers = ['lbfgs', 'saga'], penalty = ['l2'], 
     return means, stds, params
 
 
-def logistic_regression(x, y, solver, penalty, c_value):
+def logistic_regression(x, y, solver='saga', penalty='l2', c_value=1.0):
     """
     Trains a logistic regression model and returns it
     Inputs:
@@ -194,14 +194,14 @@ def logistic_regression(x, y, solver, penalty, c_value):
     
     #fits the model
     model.fit(x, y)
-    return model
+    return model 
 
 
 
 '''Multi-Layer Perceptron'''
 
 
-def mlp_cv(x, y, solvers =['adam'], lrs = [0.1, 0.01,0.001], activations = ['tanh','relu','logistic'], max_iters=[10,50], splits = 5):
+def mlp_cv(x, y, solvers =['adam'], lrs = [0.1, 0.01,0.001], activations = ['tanh','relu','logistic'], max_iters=[5,50], splits = 5):
     """
     Performs grid-search and cross-validation on the multi-layer perceptron
     Inputs:
@@ -243,8 +243,7 @@ def mlp_cv(x, y, solvers =['adam'], lrs = [0.1, 0.01,0.001], activations = ['tan
         
     return means, stds, params
 
-
-def mlp(x, y, solver, lr, act, max_iters):
+def mlp(x, y, solver='adam', lr=0.001, act='tanh', max_iters=5):
     
     """
     Trains a multi-layer perceptron
@@ -264,8 +263,3 @@ def mlp(x, y, solver, lr, act, max_iters):
                     early_stopping=True, n_iter_no_change=2)
     mlp.fit(x, y)
     return mlp
-
-
-
-
-

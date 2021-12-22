@@ -43,6 +43,7 @@ def load_contractions(PATH_PREPROCESSING):
     - PATH_PREPROCESSING (string): string containing the path of the folder in which is the contraction list
     Outputs:    
     - contraction_list (dict) : dictionnary containing the contractions as key and their corresponding English word as value
+    
     """
     contraction_list = json.loads(open(PATH_PREPROCESSING + 'english_contractions.json', 'r').read())
     
