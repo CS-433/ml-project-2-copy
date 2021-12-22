@@ -43,6 +43,18 @@ This will create a csv output file containing our predictions.
 
 On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
+To reproduce our other results, you must :
+- first preprocess the tweets using the function `preprocessing` from `preprocessing.py`
+- Transform the tweets in to numbers (embed them) source file : `embeddings.py`
+  - Glove :
+    - load the model with `load_glove_model` 
+    - use clean `clean_cols` to remove unused columns 
+    - use `df_to_numpy_features` to obtain a numpy matrix containing the features and one that contains the labels
+    - normalize the features using `standardize_cols`
+  - TF-IDF :
+    - use `tf_idf_embedding` to produce the sparse embeddings then `add_label_tfidf` to get the corresponding labels
+- Run one of the models or crossvalidation functions from `baseline.py`
+- If you want to make a submission use the corresponding submission function in `submission.py`
 
 ## Contents of the Project
 - ```BERT_models.ipynb``` contains the pipeline we used for the BERT models
