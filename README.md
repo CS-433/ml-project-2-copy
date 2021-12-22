@@ -63,6 +63,7 @@ To reproduce our other results, open `preprocessing_embedding_baseline_example` 
 
 ## Contents of the Project
 - ```BERT_models.ipynb``` contains the pipeline we used for the BERT models
+- `preprocessing_embedding_baseline_example.ipynb` contains code to reproduce our preprocessing, embedding, and results with the baseline models 
 - ```EDA.ipynb``` contains the code we used to generate Figure 1 from the report
 - `graph_BERT.ipynb` contains the code to produce the Figure 2 from the report
 - ```baseline.py``` contains the functions used to train and fit our baseline models
