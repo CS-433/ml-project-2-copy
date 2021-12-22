@@ -41,12 +41,11 @@ To run our best performing model, the script run.py must be ran having the same 
 Since the two .pkl file are too big for github we uploaded them on an external google drive here : [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
 This will create a csv output file containing our predictions.
 
-If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb`
-
+If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
 
 On a GPU it takes approximately 1 minute to run, on a CPU 10 minutes.
 
-To reproduce our other results, you can start by openning `preprocessing_embedding_baseline_example` and following the next step (all the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
+To reproduce our other results, open `preprocessing_embedding_baseline_example` and follow the next steps (most of the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
 - additionally to the packages you must install at the beggingin of `BERT_models.ipynb` install gensim using `pip install gensim`
 - first preprocess the tweets using the function `preprocessing` from `preprocessing.py` ( on train_pos and train_neg, some additional files required to run the functions are provided in our repo)
 - Transform the tweets into number vectors (embed them) using functions in `embeddings.py` :
