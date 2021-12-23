@@ -29,29 +29,29 @@ In order to run the notebooks, run the following command when the environnement 
 
 ## How to Use
 To run our best performing model, the script run.py must be ran having the same structure as in the github file meaning :
-  - in the folder data/models/BERT both files :
-          - best_submission_bert_custom.pkl
-          - best_submission_bert.pkl
-  - in the folder data/twitter-datasets/
-          - test_data.csv
-          - train_pos.csv
-          - train_neg.csv
-          - train_pos_full.csv
-          - train_neg_full.csv
+- in the folder data/models/BERT both files :
+  - best_submission_bert_custom.pkl [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
+  - best_submission_bert.pkl [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
+- in the folder data/twitter-datasets/
+  - test_data.csv
+  - train_pos.csv
+  - train_neg.csv
+  - train_pos_full.csv
+  - train_neg_full.csv
 
-Since the two .pkl file are too big for github we uploaded them on an external google drive here : [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
-This will create a csv output file containing our predictions.
+Since the above two .pkl file are too big for github we uploaded them on an external google drive here : [drive link](https://drive.google.com/drive/folders/1hAsNuEbsmkgaBuEapGjLKX5sa76Bc809?usp=sharing)
+This will create a .csv output file containing our predictions `data\submissions\output_run_py.csv` for our best run (#169220).
 
-If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with a P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
+If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used COLAB a P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
 
 On a GPU `run.py` takes approximately 1 minute to run (depends on your GPU), on a CPU it takes ~1h.
 
-To reproduce our other results, open `preprocessing_embedding_baseline_example` and follow the next steps (most of the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
-- additionally to the packages you must install at the beggingin of `BERT_models.ipynb` install gensim using `pip install gensim`
+To reproduce our other results, open `preprocessing_embedding_baseline_example.ipynb` and follow the next steps (most of the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
+- additionally to the packages you must install at the beginning of `BERT_models.ipynb` install gensim using `pip install gensim`
 - first preprocess the tweets using the function `preprocessing` from `preprocessing.py` ( on train_pos and train_neg, some additional files required to run the functions are provided in our repo)
 - Transform the tweets into number vectors (embed them) using functions in `embeddings.py` :
   - Glove :
-    - make sure you have download all the files in data directory 
+    - make sure you have downloaded all the files in data directory 
       - `glove-twitter-25.gz` was too large to host on github so we host on google drive : [link](https://drive.google.com/file/d/1aWogx_xnky0c9gE_avHuRr__8zZNO1Us/view?usp=sharing) 
     - load the model with `load_glove_model`
     - use clean `clean_cols` to remove unused columns
