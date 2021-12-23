@@ -43,7 +43,7 @@ This will create a csv output file containing our predictions.
 
 If you want to train one of our BERT models we recommend you use google COLAB, and a use a GPU (we used it with a P100 GPU), more information on how to do that is is the notebook `BERT_models.ipynb` (additionally, instructions on how to create a conda virtual environment with the packages required to run run.py are indicated inside the notebook, and you can run run.py from inside it, this was done using conda version ` 4.10.3`)
 
-On a GPU it takes approximately 1 minute to run (depends on your GPU), on a CPU it takes 1h+.
+On a GPU `run.py` takes approximately 1 minute to run (depends on your GPU), on a CPU it takes 1h+.
 
 To reproduce our other results, open `preprocessing_embedding_baseline_example` and follow the next steps (most of the next steps are implemented in the notebook except for placing the large file `glove-twitter-25.gz` in the right place)
 - additionally to the packages you must install at the beggingin of `BERT_models.ipynb` install gensim using `pip install gensim`
