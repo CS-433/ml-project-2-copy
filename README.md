@@ -52,7 +52,7 @@ To reproduce our other results, open `preprocessing_embedding_baseline_example.i
 - Transform the tweets into number vectors (embed them) using functions in `embeddings.py` :
   - Glove :
     - make sure you have downloaded all the files in data directory 
-      - `glove-twitter-25.gz` was too large to host on github so we host on google drive : [link](https://drive.google.com/file/d/1aWogx_xnky0c9gE_avHuRr__8zZNO1Us/view?usp=sharing) 
+      - `glove-twitter-25.gz` was too large to host on github so we host it on google drive : [link](https://drive.google.com/file/d/1aWogx_xnky0c9gE_avHuRr__8zZNO1Us/view?usp=sharing) 
     - load the model with `load_glove_model`
     - use clean `clean_cols` to remove unused columns
     - use `df_to_numpy_features` to obtain a numpy matrix containing the features and one that contains the labels
