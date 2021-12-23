@@ -60,8 +60,12 @@ def load_model_disk(device, path_model='./data/models/BERT/model.pkl',
                                                                num_labels = 2,
                                                                output_attentions = False,
                                                                output_hidden_states = False)
-    
-    model.load_state_dict(torch.load(path_model))
+    # the model was created on a device with gpu so the following line is necessary to be able to
+    # load it on y cpu only device
+    if str(device) == 'cpu' :
+        model.load_state_dict(torch.load(path_model,map_location=torch.device('cpu')))
+    else:
+        model.load_state_dict(torch.load(path_model))
     
     # put model in eval mode (dropout and batchnorm layers behave differently, e.g. dropout is turned off in eval)
     model.eval()
