@@ -22,6 +22,7 @@ The python libraries and versions used for this project are listed below:
   - nb_conda_kernels
 - nltk = 4.62.3
 - transformers = 4.14.1
+- gensim = 4.1.2
 
 In order to run the notebooks, run the following command when the environnement with the above dependencies is active:
 ```conda install -c conda-forge ipywidgets```
